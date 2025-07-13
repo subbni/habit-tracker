@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:habit_tracker/models/app_settings.dart';
 import 'package:habit_tracker/models/habit.dart';
 import 'package:isar/isar.dart';
@@ -82,8 +83,14 @@ class HabitDatabase extends ChangeNotifier {
                 date.day == today.day,
           );
         }
+
+        // save the updated habit to DB
+        await isar.habits.put(habit);
       });
     }
+
+    // re-read from DB
+    readHabits();
   }
 
   // UPDATE - edit habit name
