@@ -4,6 +4,7 @@ import 'package:habit_tracker/components/my_habit_tile.dart';
 import 'package:habit_tracker/database/habit_database.dart';
 import 'package:habit_tracker/models/habit.dart';
 import 'package:habit_tracker/util/habit_util.dart';
+import 'package:habit_tracker/util/strings.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,7 +33,9 @@ class _HomePageState extends State<HomePage> {
       builder: (context) => AlertDialog(
         content: TextField(
           controller: textController,
-          decoration: const InputDecoration(hintText: "Create a new habit"),
+          decoration: const InputDecoration(
+            hintText: AppString.habitNameTextField,
+          ),
         ),
         actions: [
           // save button
@@ -47,7 +50,7 @@ class _HomePageState extends State<HomePage> {
               // clear controller
               textController.clear();
             },
-            child: const Text("Save"),
+            child: const Text(AppString.saveString),
           ),
 
           // cancel button
@@ -58,7 +61,7 @@ class _HomePageState extends State<HomePage> {
               // clear controller
               textController.clear();
             },
-            child: const Text("Cancel"),
+            child: const Text(AppString.cancelString),
           ),
         ],
       ),
@@ -98,7 +101,7 @@ class _HomePageState extends State<HomePage> {
               // clear controller
               textController.clear();
             },
-            child: const Text("Save"),
+            child: const Text(AppString.saveString),
           ),
 
           // cancel button
@@ -109,7 +112,7 @@ class _HomePageState extends State<HomePage> {
               // clear controller
               textController.clear();
             },
-            child: const Text("Cancel"),
+            child: const Text(AppString.cancelString),
           ),
         ],
       ),
@@ -121,7 +124,7 @@ class _HomePageState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Are you sure you want to delete?"),
+        title: const Text(AppString.deleteHabitAlert),
         actions: [
           // delete button
           MaterialButton(
@@ -131,7 +134,7 @@ class _HomePageState extends State<HomePage> {
               // pop box
               Navigator.pop(context);
             },
-            child: const Text("Delete"),
+            child: const Text(AppString.deleteString),
           ),
 
           // cancel button
@@ -140,7 +143,7 @@ class _HomePageState extends State<HomePage> {
               // pop box
               Navigator.pop(context);
             },
-            child: const Text("Cancel"),
+            child: const Text(AppString.cancelString),
           ),
         ],
       ),
