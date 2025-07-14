@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/components/my_drawer.dart';
 import 'package:habit_tracker/components/my_habit_tile.dart';
+import 'package:habit_tracker/components/my_heat_map.dart';
 import 'package:habit_tracker/database/habit_database.dart';
 import 'package:habit_tracker/models/habit.dart';
 import 'package:habit_tracker/util/habit_util.dart';
@@ -164,7 +165,36 @@ class _HomePageState extends State<HomePage> {
           color: Theme.of(context).colorScheme.inversePrimary,
         ),
       ),
-      body: _buildHabitList(),
+      body: ListView(
+        children: [
+          // heat map
+          _buildHeatMap(),
+          // habit list
+          _buildHabitList(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeatMap() {
+    // habit database
+    final habitDatabase = context.watch<HabitDatabase>();
+    // current habits
+    List<Habit> currentHabits = habitDatabase.currentHabits;
+    // return heat map UI
+    return FutureBuilder<DateTime?>(
+      future: habitDatabase.getFirstLaunchDate(),
+      builder: (context, snapshot) {
+        // once the data is available -> build heat map
+        if (snapshot.hasData) {
+          return MyHeatMap(
+            startDate: snapshot.data!,
+            datasets: prepHeatMapDataSet(currentHabits),
+          );
+        } else {
+          return Container();
+        }
+      },
     );
   }
 
@@ -176,22 +206,40 @@ class _HomePageState extends State<HomePage> {
     List<Habit> currentHabits = habitDatabase.currentHabits;
 
     // return list of habits UI
-    return ListView.builder(
-      itemCount: currentHabits.length,
-      itemBuilder: (context, index) {
-        // get each individual habit
-        final habit = currentHabits[index];
-        // check if the habit is completed today
-        bool isCompletedToday = isHabitCompletedToday(habit.completedDays);
-        // return habit title UI
-        return MyHabitTile(
-          isCompleted: isCompletedToday,
-          text: habit.name,
-          onChanged: (value) => checkHabitOnOff(value, habit),
-          editHabit: (context) => editHabitBox(habit),
-          deleteHabit: (context) => deleteHabitBox(habit),
-        );
-      },
-    );
+    return currentHabits.isEmpty
+        ? Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30),
+            child: Center(
+              child: Text(
+                AppString.createHabitString,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          )
+        : ListView.builder(
+            itemCount: currentHabits.length,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              // get each individual habit
+              final habit = currentHabits[index];
+              // check if the habit is completed today
+              bool isCompletedToday = isHabitCompletedToday(
+                habit.completedDays,
+              );
+              // return habit title UI
+              return MyHabitTile(
+                isCompleted: isCompletedToday,
+                text: habit.name,
+                onChanged: (value) => checkHabitOnOff(value, habit),
+                editHabit: (context) => editHabitBox(habit),
+                deleteHabit: (context) => deleteHabitBox(habit),
+              );
+            },
+          );
   }
 }
