@@ -160,6 +160,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: createNewHabit,
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.tertiary,
+        shape: const CircleBorder(),
         child: Icon(
           Icons.add,
           color: Theme.of(context).colorScheme.inversePrimary,
