@@ -6,6 +6,7 @@ import 'package:habit_tracker/database/habit_database.dart';
 import 'package:habit_tracker/models/habit.dart';
 import 'package:habit_tracker/util/habit_util.dart';
 import 'package:habit_tracker/util/strings.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -154,7 +155,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: _buildTodayDate(),
+        iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
+      ),
       drawer: const MyDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: createNewHabit,
@@ -173,6 +177,19 @@ class _HomePageState extends State<HomePage> {
           // habit list
           _buildHabitList(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTodayDate() {
+    String formattedDate = DateFormat('d MMM yyyy').format(DateTime.now());
+
+    return Text(
+      formattedDate,
+      style: TextStyle(
+        fontSize: 25,
+        fontWeight: FontWeight.w400,
+        color: Theme.of(context).colorScheme.primary,
       ),
     );
   }
